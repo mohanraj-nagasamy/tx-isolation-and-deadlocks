@@ -12,13 +12,15 @@ SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
 ### Show isolation level
 
-```mysql
+#### Mysql
+```
 show variables;
 SHOW VARIABLES LIKE 'tx_isolation';
 select @@session.tx_isolation;
 ```
 
-```postgres
+#### Postgres
+```
 SHOW transaction_isolation; OR --select current_setting('transaction_isolation');
 SHOW ALL; --Displays all the settings;
 ```
