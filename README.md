@@ -22,5 +22,5 @@ select @@session.tx_isolation;
 ##### Postgres
 ```
 SHOW ALL; --Displays all the settings;
-SHOW transaction_isolation; OR --select current_setting('transaction_isolation');
+SHOW transaction_isolation; --OR select current_setting('transaction_isolation');
 ```
