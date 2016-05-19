@@ -52,6 +52,14 @@ SHOW ALL; --Displays all the settings;
 SHOW transaction_isolation; --OR select current_setting('transaction_isolation');
 ```
 
+### Tables to look at in Postgres
+
+```
+SELECT  * from pg_stat_activity;
+SELECT  * from pg_locks;
+select 1460461::regclass;
+```
+
 ## READ UNCOMMITTED
 
 #### tx1
@@ -71,7 +79,7 @@ select * from books;
 ```sql
 begin;
 select * from books;
-update books set name = 'New Book - by tx2' where name = 'Book 1';
+update books set name = 'New Book - by tx2' where id = 14;
 ```
 #### tx1
 
@@ -207,9 +215,10 @@ commit;
 
 ```sql
 select * from books; -- you can't see the committed changes
+update books set name = 'New Book - by tx1' where name = 'Book 1'; -- it will deadlock
 ```
 
-> Lost updates are possible in MySql with `REPEATABLE READ`
+> Deadlocks are possible with `SERIALIZABLE`
 
 ##### Quiz
 * What happens if two TXs updates the same data?
@@ -240,7 +249,9 @@ select * from books;
 SELECT * from books where id = 4 for update;
 ```
 
-## Deadlocks
+### Deadlocks
+
+## A locks B and B lock A
 
 ```
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; -- MySql
@@ -271,3 +282,28 @@ update books set name='Book 2 - tx1' where id = 4;
 ```
 
 > DB can detect deadlocks and rollbacks least expensive tx.
+
+## Resource
+
+* https://devcenter.heroku.com/articles/postgresql-concurrency/
+* http://www.moioli.net/progetti/deadlocks-in-postgres-101/
+* http://www.moioli.net/progetti/postgres-deadlocks-debugging-guidelines/
+* http://rhaas.blogspot.com/2011/10/deadlocks.html
+* http://www.postgresql.org/docs/9.1/static/transaction-iso.html
+* http://eric.themoritzfamily.com/understanding-psqls-mvcc.html
+* http://blog.acolyer.org/2016/02/24/a-critique-of-ansi-sql-isolation-levels/
+* [Introduction to Databases by stanford](https://lagunita.stanford.edu/courses/Engineering/db/2014_1/info)
+* [isolation levels](https://www.youtube.com/watch?v=woa2w7qisTg)
+
+
+### MySql
+* http://makandracards.com/makandra/17437-you-re-doing-it-wrong-consistent-reads-in-mysql-transactions
+* https://bugs.mysql.com/bug.php?id=53341
+
+### Book Reading
+
+* A First Course in Database Systems (3rd edition) by Ullman and Widom (U/W) -
+(same material and sections as Database Systems: The Complete Book (2nd edition) by Garcia-Molina, Ullman, and Widom)
+* Database Management Systems (3rd edition) by Ramakrishnan and Gehrke (R/G)
+* Fundamentals of Database Systems (6th edition) by Elmasri and Navathe (E/N)
+* Database System Concepts (6th edition) by Silberschatz, Korth, and Sudarshan (S/K/S)
